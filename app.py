@@ -163,7 +163,7 @@ def update_sp500():
         tickers = sp500_table[['Symbol', 'Security']]
 
         # Connect to the SQLite database (or create it if it doesn't exist)
-        conn = sqlite3.connect('sp500.db')
+        conn = sqlite3.connect('tools/sp500.db')
         cursor = conn.cursor()
 
         # Create the table for storing S&P 500 tickers if it doesn't exist
