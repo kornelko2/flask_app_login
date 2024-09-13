@@ -1,0 +1,56 @@
+/* static/styles.css */
+
+/* Define theme color */
+:root {
+    --theme-color: #440758;
+}
+
+/* Base Styles */
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Header Styles */
+header {
+    background-color: var(--theme-color); /* Use theme color */
+    color: white;
+}
+
+header h1 {
+    margin: 0;
+}
+
+header nav {
+    margin-top: 10px;
+}
+
+header .nav-link {
+    color: white;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #f8f9fa;
+    padding: 10px 0;
+}
+
+/* Form Styles */
+form .form-row {
+    margin-bottom: 15px;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+thead.thead-dark th {
+    background-color: var(--theme-color); /* Use theme color */
+    color: white;
+}

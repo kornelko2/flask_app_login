@@ -1,0 +1,66 @@
+<!-- admin/edit_transactions.html -->
+{% extends "base.html" %}
+
+{% block title %}Edit Transactions{% endblock %}
+
+{% block content %}
+<h2>Edit Transactions</h2>
+<button id="update-sp500-btn" class="btn btn-primary">Update S&P 500 Tickers</button>
+
+<script>
+    document.getElementById('update-sp500-btn').addEventListener('click', function() {
+        fetch('/update_sp500', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert(data.message);
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Error: ' + error.message);
+        });
+    });
+</script>
+
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Stock Ticker</th>
+            <th>Stock Price</th>
+            <th>Transaction Type</th>
+            <th>Transaction Cost</th>
+            <th>Stock Quantity</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in transactions %}
+        <tr>
+            <form method="post">
+                <input type="hidden" name="transaction_id" value="{{ transaction[0] }}">
+                <td><input type="date" name="date" value="{{ transaction[2] }}" required></td>
+                <td><input type="text" name="stock_ticker" value="{{ transaction[3] }}" required></td>
+                <td><input type="number" step="0.01" name="stock_price" value="{{ transaction[4] }}" required></td>
+                <td>
+                    <select name="transaction_type" required>
+                        <option value="buy" {% if transaction[5] == 'buy' %}selected{% endif %}>Buy</option>
+                        <option value="sell" {% if transaction[5] == 'sell' %}selected{% endif %}>Sell</option>
+                    </select>
+                </td>
+                <td><input type="number" step="0.01" name="transaction_cost" value="{{ transaction[6] }}" required></td>
+                <td><input type="number" name="stock_quantity" value="{{ transaction[7] }}" required></td>
+                <td><button type="submit">Update</button></td>
+            </form>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,38 @@
+<!-- templates/users.html -->
+{% extends "base.html" %}
+
+{% block title %}Registered Users{% endblock %}
+
+{% block content %}
+<h2>Registered Users</h2>
+<table border="1">
+    <tr>
+        <th>Username</th>
+        <th>Status</th>
+        <th>Lock/Unlock</th>
+        <th>Admin</th>
+        <th>Delete</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td>{{ user[1] }}</td>
+        <td>{{ user[2] }}</td>
+        <td>
+            <form method="post" action="{{ url_for('lock_user', user_id=user[0]) }}">
+                <input type="checkbox" name="locked" {% if user[2] == 'locked' %}checked{% endif %} onChange="this.form.submit()">
+            </form>
+        </td>
+        <td>
+            <form method="post" action="{{ url_for('toggle_admin', user_id=user[0]) }}">
+                <input type="checkbox" name="is_admin" {% if user[3] == 1 %}checked{% endif %} onChange="this.form.submit()">
+            </form>
+        </td>
+        <td>
+            <form method="post" action="{{ url_for('delete_user', user_id=user[0]) }}">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
