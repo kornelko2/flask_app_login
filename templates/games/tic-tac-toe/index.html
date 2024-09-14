@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Tic-Tac-Toe{% endblock %}
+
+{% block content %}
+
+<style>
+    .tic-tac-toe-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* Full viewport height */
+    }
+
+    .tic-tac-toe-board {
+        display: grid;
+        grid-template-columns: repeat(3, 100px);
+        grid-template-rows: repeat(3, 100px);
+        gap: 5px;
+    }
+
+    .tic-tac-toe-cell {
+        width: 100px;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2em;
+        border: 1px solid #000;
+        cursor: pointer;
+    }
+</style>
+
+<h2>Tic-Tac-Toe Game</h2>
+<div class="tic-tac-toe-container">
+    <div class="tic-tac-toe-board" id="tic-tac-toe-board">
+        <div class="tic-tac-toe-cell" data-cell></div>
+        <div class="tic-tac-toe-cell" data-cell></div>
+        <div class="tic-tac-toe-cell" data-cell></div>
+        <div class="tic-tac-toe-cell" data-cell></div>
+        <div class="tic-tac-toe-cell" data-cell></div>
+        <div class="tic-tac-toe-cell" data-cell></div>
+        <div class="tic-tac-toe-cell" data-cell></div>
+        <div class="tic-tac-toe-cell" data-cell></div>
+        <div class="tic-tac-toe-cell" data-cell></div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='tic-tac-toe/tic-tac-toe.js') }}"></script>
+{% endblock %}

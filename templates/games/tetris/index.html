@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Tetris{% endblock %}
+
+{% block content %}
+
+<style>
+    .centered-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* Full viewport height */
+    }
+
+    .centered-canvas {
+        border: 1px solid #000; /* Optional: Add a border to the canvas */
+    }
+</style>
+
+<h2>Tetris Game</h2>
+<label for="speed-select">Select Game Speed:</label>
+<select id="speed-select">
+    <option value="slow">Slow</option>
+    <option value="normal" selected>Normal</option>
+    <option value="fast">Fast</option>
+</select>
+<button id="start-button" class="btn btn-primary">Start the Game</button>
+<button id="pause-button" class="btn btn-secondary">Pause</button>
+<label for="mute-checkbox">Mute</label>
+<input type="checkbox" id="mute-checkbox">
+<div id="game-container" class="centered-container">
+    <canvas id="tetris-canvas" width="300" height="600" class="centered-canvas"></canvas>
+</div>
+<script src="{{ url_for('static', filename='tetris/tetris.js') }}"></script>
+{% endblock %}

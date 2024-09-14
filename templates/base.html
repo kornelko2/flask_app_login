@@ -16,6 +16,13 @@
                 {% if 'user' in session %}
                     <a class="nav-link text-white" href="{{ url_for('transactions') }}">My Transactions</a>
                     <a class="nav-link text-white" href="{{ url_for('logout') }}">Logout</a>
+                    <div class="dropdown">
+                        <a href="javascript:void(0)" class="nav-link text-white dropbtn">Games</a>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('tetris') }}">Tetris</a>
+                            <a href="{{ url_for('tic_tac_toe') }}">Tic-Tac-Toe</a>
+                        </div>
+                    </div>
                     {% if user_is_admin(session['user']) %}
                         <a class="nav-link text-white" href="{{ url_for('users_page') }}">Users</a>
                         <a class="nav-link text-white" href="{{ url_for('edit_transactions') }}">Edit Transactions</a>

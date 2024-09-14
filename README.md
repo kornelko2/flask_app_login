@@ -13,3 +13,6 @@ CZ stocks included
 set 3 currencies, USD, EUR, CZK
 currency converter for total calculations
 more portfolios per user?
+
+games
+    testris
