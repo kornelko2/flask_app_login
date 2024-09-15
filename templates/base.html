@@ -15,6 +15,7 @@
                 <a class="nav-link text-white" href="{{ url_for('home') }}">Home</a>
                 {% if 'user' in session %}
                     <a class="nav-link text-white" href="{{ url_for('transactions') }}">My Transactions</a>
+                    <a class="nav-link text-white" href="{{ url_for('correlation') }}">Portfolio Correlation</a>
                     <a class="nav-link text-white" href="{{ url_for('logout') }}">Logout</a>
                     <div class="dropdown">
                         <a href="javascript:void(0)" class="nav-link text-white dropbtn">Games</a>

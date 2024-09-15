@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Correlation Analysis</h2>
+<form method="POST" action="{{ url_for('correlation') }}">
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="portfolio_id">Portfolio:</label>
+            <select id="portfolio_id" class="form-control" name="portfolio_id">
+                <option value="">All Portfolios</option>
+                {% for portfolio in portfolios %}
+                <option value="{{ portfolio.id }}" {% if selected_portfolio and selected_portfolio.id == portfolio.id %}selected{% endif %}>{{ portfolio.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="time_period">Time Period:</label>
+            <select id="time_period" class="form-control" name="time_period">
+                <option value="1y" {% if selected_time_period == '1y' %}selected{% endif %}>Last 1 Year</option>
+                <option value="3y" {% if selected_time_period == '3y' %}selected{% endif %}>Last 3 Years</option>
+                <option value="5y" {% if selected_time_period == '5y' %}selected{% endif %}>Last 5 Years</option>
+                <option value="10y" {% if selected_time_period == '10y' %}selected{% endif %}>Last 10 Years</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="active_positions" name="active_positions_only" {% if active_positions_only %}checked{% endif %}>
+            <label class="form-check-label" for="active_positions_only">
+                Evaluate only stocks with active open positions
+            </label>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Calculate Correlation</button>
+</form>
+
+<!-- Display list of open positions -->
+{% if active_positions %}
+<h3>Open Positions</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Stock Ticker</th>
+            <th>Quantity</th>
+            <th>Total Cost</th>
+            <th>Average Price</th>
+            <th>Currency</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ticker, data in active_positions.items() %}
+        {% if not active_positions_only or data[0] != 0 %}
+        <tr>
+            <td>{{ ticker }}</td>
+            <td>{{ data[0] }}</td>
+            <td>{{ data[1] }}</td>
+            <td>{{ data[2] }}</td>
+            <td>{{ data[3] }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+<!-- Display correlation heatmap and stock price history line plot -->
+{% if graphJSON %}
+<div id="heatmap"></div>
+<div id="lineplot"></div>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    var heatmapJSON = {{ graphJSON | safe }};
+    Plotly.react('heatmap', heatmapJSON, {});
+    
+    {% if linePlotJSON %}
+    var linePlotJSON = {{ linePlotJSON | safe }};
+    Plotly.react('lineplot', linePlotJSON, {});
+    {% endif %}
+</script>
+{% endif %}
+{% endblock %}

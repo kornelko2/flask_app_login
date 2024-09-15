@@ -10,8 +10,10 @@
     <input type="text" id="username" name="username">
     <label for="password">Password:</label>
     <input type="password" id="password" name="password">
-    <label for="is_admin">Admin:</label>
-    <input type="checkbox" id="is_admin" name="is_admin">
+    {% if not users_exist %}
+        <label for="is_admin">Admin:</label>
+        <input type="checkbox" id="is_admin" name="is_admin">
+    {% endif %}
     <button type="submit">Register</button>
 </form>
 {% endblock %}
