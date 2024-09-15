@@ -1,0 +1,15 @@
+version: '3.8'
+Services:
+  Db:
+    image: postgres:latest
+    restart: always
+    Ports:
+    - 5432:5432
+    Environment:
+    - POSTGRES_USER=kornelko
+    - POSTGRES_PASSWORD=skslovan
+    Volumes:
+    - db:/var/lib/postgresql/data
+Volumes:
+  Db:
+    driver: local

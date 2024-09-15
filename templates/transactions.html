@@ -5,9 +5,28 @@
 {% block content %}
 <h2 class="mt-4">Transaction History</h2>
 
-<!-- Form for adding new transactions -->
-<form method="post" class="mb-4">
+<!-- Form for creating new portfolios -->
+<form method="post" action="{{ url_for('create_portfolio') }}" class="mb-4">
     <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="portfolio_name">Portfolio Name:</label>
+            <input type="text" class="form-control" id="portfolio_name" name="portfolio_name" required>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Create Portfolio</button>
+</form>
+
+<!-- Form for adding new transactions -->
+<form method="post" action="{{ url_for('add_transaction') }}" class="mb-4">
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="portfolio_id">Portfolio:</label>
+            <select id="portfolio_id" class="form-control" name="portfolio_id" required>
+                {% for portfolio in portfolios %}
+                <option value="{{ portfolio.id }}">{{ portfolio.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
         <div class="form-group col-md-4">
             <label for="date">Date:</label>
             <input type="date" class="form-control" id="date" name="date" required>
@@ -16,12 +35,12 @@
             <label for="stock_ticker">Stock Ticker:</label>
             <input type="text" class="form-control" id="stock_ticker" name="stock_ticker" required>
         </div>
+    </div>
+    <div class="form-row">
         <div class="form-group col-md-4">
             <label for="stock_price">Stock Price:</label>
             <input type="number" step="0.01" class="form-control" id="stock_price" name="stock_price" required>
         </div>
-    </div>
-    <div class="form-row">
         <div class="form-group col-md-4">
             <label for="transaction_type">Transaction Type:</label>
             <select id="transaction_type" class="form-control" name="transaction_type" required>
@@ -33,79 +52,35 @@
             <label for="transaction_cost">Transaction Cost:</label>
             <input type="number" step="0.01" class="form-control" id="transaction_cost" name="transaction_cost" required>
         </div>
-        <div class="form-group col-md-4">
-            <label for="stock_quantity">Stock Quantity:</label>
-            <input type="number" step="0.0001" class="form-control" id="stock_quantity" name="stock_quantity" required>
-        </div>
     </div>
     <div class="form-row">
         <div class="form-group col-md-4">
+            <label for="stock_quantity">Stock Quantity:</label>
+            <input type="number" step="0.01" class="form-control" id="stock_quantity" name="stock_quantity" required>
+        </div>
+        <div class="form-group col-md-4">
             <label for="currency">Currency:</label>
-            <input type="text" class="form-control" id="currency" name="currency" maxlength="3" required>
+            <input type="text" class="form-control" id="currency" name="currency" required>
         </div>
     </div>
     <button type="submit" class="btn btn-primary">Add Transaction</button>
 </form>
-<!-- Flash messages section -->
-<div id="flash-messages">
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
+
+<!-- Multi-select dropdown for filtering transactions by portfolio -->
+<form method="get" class="mb-4">
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="portfolio_select">Select Portfolios:</label>
+            <select id="portfolio_select" class="form-control" name="portfolio_id" multiple>
+                <option value="all" id="select_all_option">Select All</option>
+                {% for portfolio in portfolios %}
+                <option value="{{ portfolio.id }}" {% if portfolio.id in selected_portfolio_ids %}selected{% endif %}>{{ portfolio.name }}</option>
                 {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-</div>
-
-<script>
-    // Function to display flash messages as pop-ups
-    function showFlashMessage(message) {
-        alert(message);
-    }
-
-    // Function to display all flash messages
-    function displayFlashMessages() {
-        const flashMessages = {{ get_flashed_messages() | tojson }};
-        flashMessages.forEach(message => {
-            showFlashMessage(message);
-        });
-    }
-
-    // Call the function to display flash messages when the page loads
-    window.onload = displayFlashMessages;
-</script>
-
-<!-- Display existing transactions -->
-<table class="table table-striped table-bordered">
-    <thead class="thead-dark">
-        <tr>
-            <th>Date</th>
-            <th>Stock Ticker</th>
-            <th>Stock Price</th>
-            <th>Transaction Type</th>
-            <th>Transaction Cost</th>
-            <th>Stock Quantity</th>
-            <th>Total Transaction Cost</th>
-            <th>Currency</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for transaction in transactions %}
-        <tr>
-            <td>{{ transaction[2] }}</td>
-            <td>{{ transaction[3] }}</td>
-            <td>{{ transaction[4] }}</td>
-            <td>{{ transaction[5] }}</td>
-            <td>{{ transaction[6] }}</td>
-            <td>{{ '%.4f'|format(transaction[7]) }}</td>
-            <td>{{ '%.2f'|format(transaction[8] if transaction[8] is not none else 0.00) }}</td>
-            <td>{{ transaction[9] }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+            </select>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
 
 <h2 class="mt-4">My Open Positions</h2>
 
@@ -124,6 +99,7 @@
     </thead>
     <tbody>
         {% for position in positions %}
+        {% if position[1] != 0 %}
         <tr>
             <td>{{ position[0] }}</td>
             <td>{{ '%.4f'|format(position[1]) }}</td>
@@ -143,8 +119,9 @@
                     N/A
                 {% endif %}
             </td>
-            <td>{{ position[4] }}</td>
+            <td>{{ position[6] }}</td> <!-- Corrected to position[6] for currency -->
         </tr>
+        {% endif %}
         {% endfor %}
     </tbody>
 </table>
@@ -174,4 +151,35 @@
         {% endfor %}
     </tbody>
 </table>
+<h2 class="mt-4">Transaction History</h2>
+<!-- Display transaction history -->
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>Date</th>
+            <th>Stock Ticker</th>
+            <th>Transaction Type</th>
+            <th>Stock Price</th>
+            <th>Stock Quantity</th>
+            <th>Transaction Cost</th>
+            <th>Total Transaction Cost</th>
+            <th>Currency</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in transactions %}
+        <tr>
+            <td>{{ transaction.date }}</td>
+            <td>{{ transaction.stock_ticker }}</td>
+            <td>{{ transaction.transaction_type }}</td>
+            <td>{{ '%.2f'|format(transaction.stock_price) }}</td>
+            <td>{{ '%.4f'|format(transaction.stock_quantity) }}</td>
+            <td>{{ '%.2f'|format(transaction.transaction_cost) }}</td>
+            <td>{{ '%.2f'|format(transaction.total_transaction_cost) }}</td>
+            <td>{{ transaction.currency }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 {% endblock %}

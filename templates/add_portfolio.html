@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Portfolio</title>
+</head>
+<body>
+    <h1>Add Portfolio</h1>
+    <form method="POST" action="{{ url_for('add_portfolio') }}">
+        <label for="portfolio_name">Portfolio Name:</label>
+        <input type="text" id="portfolio_name" name="portfolio_name" required>
+        <button type="submit">Add Portfolio</button>
+    </form>
+    <a href="{{ url_for('home') }}">Back to Home</a>
+</body>
+</html>
