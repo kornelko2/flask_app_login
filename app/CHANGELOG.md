@@ -1,6 +1,8 @@
 # Changelog
 
-
+## [0.0.9] - 2024-09-17
+### Added
+- do do plot visualisation update
 
 ## [0.0.8] - 2024-09-17
 ### Added

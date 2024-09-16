@@ -51,6 +51,9 @@ def init_dash(server):
                     ]
                 }
             },
+            filter_action='native',  # Enable header filtering
+            page_action='native',    # Enable pagination
+            page_size=12,            # Number of rows per page
             style_cell={
                 'fontFamily': 'Arial, sans-serif',  # Set the font family
                 'fontSize': '14px',  # Set the font size
