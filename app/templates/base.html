@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{% block title %}My Flask App{% endblock %}</title>
+    <title>{% block title %}Kornel's Portfolio App{% endblock %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}?v=1.0">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -10,26 +10,27 @@
 <body>
     <header class="bg-primary text-white p-3">
         <div class="container">
-            <h1>My Flask App</h1>
+            <h1>Kornel's Portfolio App</h1>
             <nav class="nav">
-                <a class="nav-link text-white" href="{{ url_for('home') }}">Home</a>
+                <a class="nav-link text-white" href="{{ url_for('main.home') }}">Home</a>
                 {% if 'user' in session %}
-                    <a class="nav-link text-white" href="{{ url_for('transactions') }}">My Transactions</a>
-                    <a class="nav-link text-white" href="{{ url_for('correlation') }}">Portfolio Correlation</a>
-                    <a class="nav-link text-white" href="{{ url_for('logout') }}">Logout</a>
+                    <a class="nav-link text-white" href="{{ url_for('correlation.correlation') }}">Portfolio Correlation</a>
+                    <a class="nav-link text-white" href="{{ url_for('transactions.transactions') }}">My Transactions</a>
+
+                    <a class="nav-link text-white" href="{{ url_for('auth.logout') }}">Logout</a>
                     <div class="dropdown">
                         <a href="javascript:void(0)" class="nav-link text-white dropbtn">Games</a>
                         <div class="dropdown-content">
-                            <a href="{{ url_for('tetris') }}">Tetris</a>
-                            <a href="{{ url_for('tic_tac_toe') }}">Tic-Tac-Toe</a>
+                            <a href="{{ url_for('games.tetris') }}">Tetris</a>
+                            <a href="{{ url_for('games.tic_tac_toe') }}">Tic-Tac-Toe</a>
                         </div>
                     </div>
-                    {% if user_is_admin(session['user']) %}
-                        <a class="nav-link text-white" href="{{ url_for('users_page') }}">Users</a>
-                    {% endif %}
+                {% if user_is_admin(session['user']) %}
+                    <a class="nav-link text-white" href="{{ url_for('admin.users_page') }}">Users</a>
+                {% endif %}
                 {% else %}
-                    <a class="nav-link text-white" href="{{ url_for('login') }}">Login</a>
-                    <a class="nav-link text-white" href="{{ url_for('register') }}">Register</a>
+                    <a class="nav-link text-white" href="{{ url_for('auth.login') }}">Login</a>
+                    <a class="nav-link text-white" href="{{ url_for('auth.register') }}">Register</a>
                 {% endif %}
             </nav>
         </div>
@@ -38,7 +39,7 @@
         {% block content %}{% endblock %}
     </main>
     <footer class="bg-light text-center py-3">
-        <p>&copy; 2023 My Flask App</p>
+        <p>&copy; 2024 Kornel's Portfolio App</p>
     </footer>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

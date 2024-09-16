@@ -6,7 +6,7 @@
 <h2 class="mt-4">Transaction History</h2>
 
 <!-- Form for creating new portfolios -->
-<form method="post" action="{{ url_for('create_portfolio') }}" class="mb-4">
+<form method="post" action="{{ url_for('transactions.create_portfolio') }}" class="mb-4">
     <div class="form-row">
         <div class="form-group col-md-6">
             <label for="portfolio_name">Portfolio Name:</label>
@@ -17,7 +17,7 @@
 </form>
 
 <!-- Form for adding new transactions -->
-<form method="post" action="{{ url_for('add_transaction') }}" class="mb-4">
+<form method="post" action="{{ url_for('transactions.add_transaction') }}" class="mb-4">
     <div class="form-row">
         <div class="form-group col-md-4">
             <label for="portfolio_id">Portfolio:</label>

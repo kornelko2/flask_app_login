@@ -5,7 +5,6 @@ import pandas as pd
 from dotenv import load_dotenv
 import os
 import subprocess
-import logging
 import json
 from db_extension import db  # Import db from db_extension
 from models import User, Transaction, SP500Ticker, Portfolio  # Import models after db
@@ -474,14 +473,12 @@ def tetris():
 
 @app.route('/start_tetris', methods=['POST'])
 def start_tetris():
-    logging.debug('start_tetris route triggered')
     try:
         data = json.loads(request.data)
         game_speed = data.get('gameSpeed', 500)  # Default to normal speed if not provided
         subprocess.Popen(['python', 'tools/tetris_game.py', str(game_speed)])
-        logging.debug('Tetris game started successfully with speed: %d', game_speed)
     except Exception as e:
-        logging.error(f'Failed to start Tetris game: {e}')
+        print(f'Failed to start Tetris game: {e}')
     return jsonify(success=True)
 
 @app.route('/tic_tac_toe')

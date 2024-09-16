@@ -1,6 +1,7 @@
 calculate incoming dividends
 done - make portfolio correlation
-monthly, yearlz and weekly portfolio performace overviews. add total to the profit tables and profits
+monthly, yearlz and weekly portfolio performace overviews. 
+add total to the profit tables and profits
 add page with fundamental data
 count with CZ taxes
 count with CZ 3 years tax free period
