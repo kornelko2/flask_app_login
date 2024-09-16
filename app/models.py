@@ -29,3 +29,13 @@ class SP500Ticker(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ticker = db.Column(db.String(10), unique=True, nullable=False)
     company_name = db.Column(db.String(100), nullable=False)
+    
+class Todo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    status = db.Column(db.String(20), nullable=False, default='idea')
+    description = db.Column(db.Text, nullable=True)
+    version = db.Column(db.String(20), nullable=True)
+    creation_date = db.Column(db.DateTime, nullable=False)
+    done_date = db.Column(db.DateTime, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

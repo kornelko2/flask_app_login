@@ -16,7 +16,6 @@
                 {% if 'user' in session %}
                     <a class="nav-link text-white" href="{{ url_for('correlation.correlation') }}">Portfolio Correlation</a>
                     <a class="nav-link text-white" href="{{ url_for('transactions.transactions') }}">My Transactions</a>
-
                     <a class="nav-link text-white" href="{{ url_for('auth.logout') }}">Logout</a>
                     <div class="dropdown">
                         <a href="javascript:void(0)" class="nav-link text-white dropbtn">Games</a>
@@ -27,6 +26,7 @@
                     </div>
                 {% if user_is_admin(session['user']) %}
                     <a class="nav-link text-white" href="{{ url_for('admin.users_page') }}">Users</a>
+                    <a class="nav-link text-white" href="{{ url_for('todo.todo') }}">To Do</a>
                 {% endif %}
                 {% else %}
                     <a class="nav-link text-white" href="{{ url_for('auth.login') }}">Login</a>
@@ -39,7 +39,7 @@
         {% block content %}{% endblock %}
     </main>
     <footer class="bg-light text-center py-3">
-        <p>&copy; 2024 Kornel's Portfolio App</p>
+        <p>&copy; 2024 Kornel's Portfolio App v.{{ version }}</p> 
     </footer>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
