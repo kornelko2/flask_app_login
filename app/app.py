@@ -22,8 +22,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)  # Initialize db with the app
 
 
-
-
 # Configure logging
 # logging.basicConfig(level=logging.DEBUG)
 

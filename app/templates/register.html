@@ -5,6 +5,18 @@
 
 {% block content %}
 <h2>Register</h2>
+
+<!-- Flash messages section -->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flashes">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
 <form method="post">
     <label for="username">Username:</label>
     <input type="text" id="username" name="username">

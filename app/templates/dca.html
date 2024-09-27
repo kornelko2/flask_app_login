@@ -1,0 +1,86 @@
+<!-- templates/dca.html -->
+{% extends "base.html" %}
+
+{% block title %}DCA Calculator{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="my-4">Dollar Cost Averaging (DCA) Calculator</h2>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert alert-warning" role="alert">
+          {% for message in messages %}
+            <p>{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="post" class="needs-validation" novalidate>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label for="initial_investment">Initial Investment:</label>
+                <input type="number" class="form-control" id="initial_investment" name="initial_investment" step="10" value="{{ initial_investment|default(1000) }}" required>
+                <div class="invalid-feedback">Please enter a valid initial investment.</div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="monthly_investment">Monthly Investment:</label>
+                <input type="number" class="form-control" id="monthly_investment" name="monthly_investment" step="10" value="{{ monthly_investment|default(100) }}" required>
+                <div class="invalid-feedback">Please enter a valid monthly investment.</div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="annual_return">Annual Return (%):</label>
+                <input type="number" class="form-control" id="annual_return" name="annual_return" step="0.01" value="{{ annual_return|default(7) }}" required>
+                <div class="invalid-feedback">Please enter a valid annual return percentage.</div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label for="years">Years:</label>
+                <input type="number" class="form-control" id="years" name="years" value="{{ years|default(10) }}" required>
+                <div class="invalid-feedback">Please enter a valid number of years.</div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="contribution_frequency">Contribution Frequency:</label>
+                <select class="form-control" id="contribution_frequency" name="contribution_frequency" required>
+                    <option value="monthly" {% if contribution_frequency == 'monthly' %}selected{% endif %}>Monthly</option>
+                    <option value="quarterly" {% if contribution_frequency == 'quarterly' %}selected{% endif %}>Quarterly</option>
+                    <option value="semiannually" {% if contribution_frequency == 'semiannually' %}selected{% endif %}>Semiannually</option>
+                    <option value="annually" {% if contribution_frequency == 'annually' %}selected{% endif %}>Annually</option>
+                </select>
+                <div class="invalid-feedback">Please select a contribution frequency.</div>
+            </div>
+            <div class="col-md-4 mb-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary mr-2">Calculate</button>
+                <button type="submit" name="export" value="true" class="btn btn-secondary">Export to Excel</button>
+            </div>
+        </div>
+    </form>
+
+    {% if total_investment is not none and final_amount is not none %}
+        <h3 class="my-4">Results:</h3>
+        <p>Total Investment: ${{ total_investment }}</p>
+        <p>Final Amount: ${{ final_amount }}</p>
+        
+        <div id="plot" style="width: 100%;"></div>
+        
+        <div class="mt-4">
+            <form method="post">
+                <input type="hidden" name="initial_investment" value="{{ initial_investment }}">
+                <input type="hidden" name="monthly_investment" value="{{ monthly_investment }}">
+                <input type="hidden" name="annual_return" value="{{ annual_return }}">
+                <input type="hidden" name="years" value="{{ years }}">
+                <input type="hidden" name="contribution_frequency" value="{{ contribution_frequency }}">
+            </form>
+        </div>
+
+        <script>
+            var plot_json = {{ plot_json | safe }};
+            var plot_data = plot_json.data;
+            var plot_layout = plot_json.layout;
+            Plotly.newPlot('plot', plot_data, plot_layout);
+        </script>
+    {% endif %}
+</div>
+{% endblock %}

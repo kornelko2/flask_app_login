@@ -1,4 +1,9 @@
 # Changelog
+## [0.0.10] - 2024-09-27
+### Added
+- durring the registration user is check if exist. if exist other username must be choosen
+- introduction dollar cost averaging
+- introduction dollar cost averaging with stocks. export to excel is not working. 
 
 ## [0.0.9] - 2024-09-17
 ### Added

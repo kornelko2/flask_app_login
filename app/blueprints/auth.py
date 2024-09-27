@@ -29,6 +29,13 @@ def register():
         password = generate_password_hash(request.form['password'])
         is_admin = 1 if 'is_admin' in request.form else 0
         status = 'active' if not users_exist else 'locked'
+        
+        # Check if the username already exists
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            flash('Username already exists. Please choose a different username.')
+            return redirect(url_for('auth.register'))
+        
         try:
             new_user = User(username=username, password=password, is_admin=is_admin, status=status)
             db.session.add(new_user)
@@ -36,11 +43,11 @@ def register():
             return redirect(url_for('auth.login'))
         except Exception as e:
             db.session.rollback()
-            if 'UNIQUE constraint failed' in str(e):
-                return 'Username already exists'
-            else:
-                return 'An error occurred'
+            flash('An error occurred. Please try again.')
+            return redirect(url_for('auth.register'))
+    
     return render_template('register.html', users_exist=users_exist)
+
 
 @auth_bp.route('/logout')
 def logout():

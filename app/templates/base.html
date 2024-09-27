@@ -5,6 +5,7 @@
     <title>{% block title %}Kornel's Portfolio App{% endblock %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}?v=1.0">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 <body>
@@ -16,6 +17,8 @@
                 {% if 'user' in session %}
                     <a class="nav-link text-white" href="{{ url_for('correlation.correlation') }}">Portfolio Correlation</a>
                     <a class="nav-link text-white" href="{{ url_for('transactions.transactions') }}">My Transactions</a>
+                    <a class="nav-link text-white" href="{{ url_for('dca.dca_calculator') }}">DCA Calculator</a>
+                    <a class="nav-link text-white" href="{{ url_for('dca_stocks.dca_stocks') }}">DCA Stocks Calculator
                     <a class="nav-link text-white" href="{{ url_for('auth.logout') }}">Logout</a>
                     <div class="dropdown">
                         <a href="javascript:void(0)" class="nav-link text-white dropbtn">Games</a>

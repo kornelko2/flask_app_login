@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}DCA Stocks Calculator{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="my-4">Dollar Cost Averaging (DCA) Stocks Calculator</h2>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert alert-warning" role="alert">
+          {% for message in messages %}
+            <p>{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="post" class="needs-validation" novalidate>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label for="start_date">Start Date:</label>
+                <input type="date" class="form-control" id="start_date" name="start_date" value="{{ request.form.start_date|default('2010-01-01') }}" required>
+                <div class="invalid-feedback">Please enter a valid start date.</div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="end_date">End Date:</label>
+                <input type="date" class="form-control" id="end_date" name="end_date" value="{{ request.form.end_date|default('2012-01-01') }}" required>
+                <div class="invalid-feedback">Please enter a valid end date.</div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="investment_amount">Investment Amount per Period:</label>
+                <input type="number" class="form-control" id="investment_amount" name="investment_amount" step="10" value="{{ request.form.investment_amount|default(1000) }}" required>
+                <div class="invalid-feedback">Please enter a valid investment amount.</div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label for="frequency">Investment Frequency:</label>
+                <select class="form-control" id="frequency" name="frequency" required>
+                    <option value="monthly" {% if request.form.frequency == 'monthly' %}selected{% endif %}>Monthly</option>
+                    <option value="quarterly" {% if request.form.frequency == 'quarterly' %}selected{% endif %}>Quarterly</option>
+                </select>
+                <div class="invalid-feedback">Please select an investment frequency.</div>
+            </div>
+            <div class="col-md-8 mb-3">
+                <label for="stocks">Select Stocks (1-12):</label>
+                <select class="form-control" id="stocks" name="stocks" multiple required>
+                    <option value="AAPL" {% if 'AAPL' in request.form.getlist('stocks') %}selected{% endif %}>Apple (AAPL)</option>
+                    <option value="MSFT" {% if 'MSFT' in request.form.getlist('stocks') %}selected{% endif %}>Microsoft (MSFT)</option>
+                    <option value="GOOGL" {% if 'GOOGL' in request.form.getlist('stocks') %}selected{% endif %}>Alphabet (GOOGL)</option>
+                    <option value="AMZN" {% if 'AMZN' in request.form.getlist('stocks') %}selected{% endif %}>Amazon (AMZN)</option>
+                    <option value="TSLA" {% if 'TSLA' in request.form.getlist('stocks') %}selected{% endif %}>Tesla (TSLA)</option>
+                    <option value="FB" {% if 'FB' in request.form.getlist('stocks') %}selected{% endif %}>Facebook (FB)</option>
+                    <option value="NVDA" {% if 'NVDA' in request.form.getlist('stocks') %}selected{% endif %}>NVIDIA (NVDA)</option>
+                    <option value="NFLX" {% if 'NFLX' in request.form.getlist('stocks') %}selected{% endif %}>Netflix (NFLX)</option>
+                    <option value="BABA" {% if 'BABA' in request.form.getlist('stocks') %}selected{% endif %}>Alibaba (BABA)</option>
+                    <option value="V" {% if 'V' in request.form.getlist('stocks') %}selected{% endif %}>Visa (V)</option>
+                    <option value="JPM" {% if 'JPM' in request.form.getlist('stocks') %}selected{% endif %}>JPMorgan Chase (JPM)</option>
+                    <option value="JNJ" {% if 'JNJ' in request.form.getlist('stocks') %}selected{% endif %}>Johnson & Johnson (JNJ)</option>
+                </select>
+                <div class="invalid-feedback">Please select between 1 and 12 stocks.</div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-12 mb-3 d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary mr-2">Calculate</button>
+            </div>
+        </div>
+    </form>
+
+    {% if total_investment is not none and final_amount is not none %}
+        <h3 class="my-4">Results:</h3>
+        <p>Total Investment: ${{ total_investment }}</p>
+        <p>Final Amount: ${{ final_amount }}</p>
+        
+        <div id="plot" style="width: 100%;"></div>
+        
+        <div class="mt-4">
+            <form method="post" action="/export_table">
+                <input type="hidden" name="weeks" value="{{ weeks }}">
+                <input type="hidden" name="contribution_dates" value="{{ contribution_dates }}">
+                <input type="hidden" name="values" value="{{ values }}">
+                <input type="hidden" name="contributions" value="{{ contributions }}">
+                <input type="hidden" name="profit_percentages" value="{{ profit_percentages }}">
+                <input type="hidden" name="stocks" value="{{ stocks }}">
+                
+                {% for stock in stocks %}
+                    <input type="hidden" name="{{ stock }}_purchased" value="{{ purchased_stocks[stock] }}">
+                    <input type="hidden" name="{{ stock }}_total_owned" value="{{ total_stocks_owned[stock] }}">
+                    <input type="hidden" name="{{ stock }}_price" value="{{ stock_prices_list[stock] }}">
+                {% endfor %}
+                
+                <button type="submit" class="btn btn-secondary">Export to Excel</button>
+            </form>
+        </div>
+
+        <script>
+            var plot_json = {{ plot_json | safe }};
+            var plot_data = plot_json.data;
+            var plot_layout = plot_json.layout;
+            Plotly.newPlot('plot', plot_data, plot_layout);
+        </script>
+    {% endif %}
+</div>
+{% endblock %}

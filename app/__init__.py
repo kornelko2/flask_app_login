@@ -8,9 +8,11 @@ from app.blueprints.admin import admin_bp
 from app.blueprints.main import main_bp
 from app.blueprints.transactions import transactions_bp
 from app.blueprints.todo import todo_bp
+from app.blueprints.dca import dca_bp
+from app.blueprints.dca_stocks import dca_stocks_bp
 from app.utils import user_is_admin
 
-__version__ = '0.0.8'
+__version__ = '0.0.10'
 
 def create_app():
     app = Flask(__name__)
@@ -25,6 +27,8 @@ def create_app():
     app.register_blueprint(admin_bp)
     app.register_blueprint(main_bp)
     app.register_blueprint(todo_bp)
+    app.register_blueprint(dca_bp)
+    app.register_blueprint(dca_stocks_bp)
     
     @app.context_processor
     def inject_user_is_admin():
@@ -37,5 +41,13 @@ def create_app():
     @app.context_processor
     def inject_version():
         return dict(version=__version__)
+    
+    # Define a custom filter to get the length of a list
+    @app.template_filter('length')
+    def length_filter(value):
+        return len(value)
 
+    # Register the zip function as a global function
+    app.jinja_env.globals.update(zip=zip)
+    
     return app
