@@ -19,3 +19,4 @@ done - users are from defail deactivated after registration
 done - games
     testris
     tic tac toe
+https://api.polygon.io/v2/aggs/ticker/AAPL/range/1/day/2023-01-09/2023-02-10?adjusted=true&sort=asc&apiKey=LfaLOFecUkctNYv_XGUQ_u2O72EbiC1D
